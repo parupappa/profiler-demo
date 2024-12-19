@@ -40,10 +40,9 @@ func main() {
 	// Http server
 	mux := httptrace.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// リクエストのボディを取得します
 		w.Write([]byte("Hello World!"))
 
-		// ロジック
+		// おもたいロジック
 		count := calcTargetLogic(appVersion)
 		fmt.Println("count: ", count)
 	})
