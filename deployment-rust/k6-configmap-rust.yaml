@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k6-script-rust
+data:
+  script.js: |
+    import { sleep } from 'k6';
+    import http from 'k6/http';
+
+    const baseEndpoints = ['http://rust-service-v1:8080', 'http://rust-service-v2:8080'];
+
+    export const options = {
+      scenarios: {
+        load_test: {
+          executor: 'constant-arrival-rate',
+          rate: 1,
+          timeUnit: '1s',
+          duration: '10000000m', # infinity
+          preAllocatedVUs: 1,
+          maxVUs: 1,
+        },
+      },
+    };
+
+    let endpointIndex = 0;
+
+    export default function () {
+      const baseEndpoint = baseEndpoints[endpointIndex];
+      http.get(baseEndpoint);
+      endpointIndex = (endpointIndex + 1) % baseEndpoints.length;
+      sleep(1);
+    } 
